@@ -20,7 +20,7 @@ void quiz();
 
 
 
-// Creating a structure to store
+// Creating a global structure to store
 // data of the user
 struct pass 
 {
@@ -39,8 +39,10 @@ struct money
 	char usernameto[50];
 	char userpersonfrom[50];
 	long int money1;
+	float balance;
 };
 
+// Structure to make up a password that you can log in with//
 struct userpass 
 {
 	char password[50];
@@ -51,33 +53,33 @@ struct userpass
 // of users
 void account(void)
 {
-	char password[20];
+	char password[20]; //
 	int passwordlength, i, seek = 0;
 	char ch;
-	FILE *fp, *fu;
-	struct pass u1;
-	struct userpass p1;
+	FILE *fp, *fu; //fp is for opening the file// //fu is for closing file//
+	struct pass u1; //making a structure from the pass structure named u1//
+	struct userpass p1; //making a structure from the userpass structure named p1//
 
 	struct userpass u2;
 
 	// Opening file to
 	// write data of a user
-	fp = fopen("username.txt", "w");
+	fp = fopen("username.txt", "w"); //opening a file in writing mode//
 
 	// Inputs
 	system("cls");
-	printf("\n\n!!!!!CREATE ACCOUNT!!!!!");
+	printf("\n\nCreate Account: ");
 
-	printf("\n\nFIRST NAME..");
+	printf("\n\nFirst Name: ");
 	scanf("%s", &u1.fname);
 
-	printf("\n\n\nLAST NAME..");
+	printf("\n\n\nLast Name: ");
 	scanf("%s", &u1.lname);
 	
-	printf("\n\nUSERNAME.. ");
+	printf("\n\nUsername: ");
 	scanf("%s", &u1.username);
 
-	printf("\n\nPASSWORD..");
+	printf("\n\nPassword: ");
 
 	//Password 
 		for (i = 0; i < 50; i++) 
@@ -97,7 +99,7 @@ void account(void)
 	password[i]='\0';
 
 	// Writing to the file
-	fwrite(&u1, sizeof(u1), 1, fp);
+	fwrite(&u1, sizeof(u1), 1, fp); //arguments =(where we write, how much memory we give to the file, how much we write, variable that will function as our output)//
 
 	// Closing file
 	fclose(fp);
@@ -123,10 +125,10 @@ void accountcreated(void)
 
 	
 
-	printf("Account has been created successfully..../n");
+	printf("Account has been created successfully....\n");
 	
 
-	printf("Press Enter to login:");
+	printf("Press Enter to login: ");
 
 	getche();
 	login();//calling function
@@ -137,11 +139,11 @@ void accountcreated(void)
 void login(void)
 {
 	system("cls");
-
+	int value;
 	char username[50];
 	char password[50];
 
-	int i, j, k;
+	int i, j, k, count=0, value2;
 	char ch;
 	FILE *fp, *fu;
 	struct pass u1;
@@ -149,27 +151,48 @@ void login(void)
 
 	// Opening file of
 	// user data
-	fp = fopen("username.txt", "rb");
+	fp = fopen("username.txt", "r"); //opening a file in the read mode//
 
 	if (fp == NULL) 
 	{
-		printf("ERROR IN OPENING FILE");
+		printf("Error in opening the file. ");
 	}
 	
-	printf(" Account Login/n");
+	printf(" Account Login: \n");
 	
 	printf("**************************************************************\n");
 
 	
-	printf("---- LOG IN ----\n");
+	printf("---- Log In ----\n");
 
 	// Take input
 	
-	printf("Username..\n");
+	printf("Username: \n");
 	scanf("%s", &username);
 
-	
-	printf("Password..\n");
+	// Checking if username
+	// exists in the file or not
+	while (fread(&u1, sizeof(u1), 1, fp)) //arguments = ()
+	{
+		do
+		{
+			value2= (strcmp(username, u1.username)); //if the predefined username and the username entered are identical//
+			if (value2 == 0)
+			{
+				loginsu();
+				display(username);
+			}
+
+			else 
+			{
+				printf("Username entered wrong! \n");
+				break;
+			}
+			count=count +1;
+		} while (value2!=0 || count<3);
+		
+		
+	printf("Password: \n");
 
 	// Input the password
 	for (i = 0; i < 50; i++) 
@@ -189,16 +212,43 @@ void login(void)
 			
 	}
 
-	// Checking if username
-	// exists in the file or not
-	while (fread(&u1, sizeof(u1), 1, fp))
-	{
-		if (strcmp(username, u1.username) == 0) 
+	
+		do
 		{
-			loginsu();
-			display(username);
-		}
-	}
+			// Input the password
+			for (i = 0; i < 50; i++) 
+				{
+				count=0;
+				ch = getch();
+				if (ch != 13)
+				{
+					password[i] = ch;
+					ch = '*';
+					printf("%c", ch);
+				}
+
+				else
+				{
+					break;
+				}
+					
+				}
+				 value =(strcmp(password, u2.password));//if the predefined username and the username entered are identical//
+			if (value == 0)
+			{
+				loginsu();
+				
+			}
+
+			else 
+			{
+				printf("Password entered wrong! \n");
+				break;
+			}
+		}while (value!=0 || count<3);
+		} 
+		
+		
 
 	// Closing the file
 	fclose(fp);
@@ -212,7 +262,7 @@ void loginsu(void)
 	FILE* fp;
 	struct pass u1;
 	system("cls");
-	printf("Fetching account details.....\n");
+	printf("Fetching account details: \n");
 	for (i = 0; i < 20000; i++) 
 	{
 		i++;
@@ -220,9 +270,9 @@ void loginsu(void)
 	}
 
 	
-	printf("Login Successful....\n");
+	printf("Login Successful: \n");
 	
-	printf("Press enter to continue\n");
+	printf("Press Enter to continue: \n");
 
 	getche();
 }
@@ -234,33 +284,33 @@ void display(char username1[])
 	system("cls");
 	FILE* fp;
 	int choice, i;
-	fp = fopen("username.txt", "rb");
+	fp = fopen("username.txt", "r");
 	struct pass u1;
 
 	if (fp == NULL) 
 	{
-		printf("Error in opening file");
+		printf("Error in opening the file. ");
 	}
 
 	while (fread(&u1, sizeof(u1), 1, fp)) 
 	{
-		if (strcmp(username1, u1.username) == 0)
+		if (strcmp(username1, u1.username) == 0) //if predefined username and username entered are equal//
 		 {
 			
-			printf("Welcome, %s %s", u1.fname, u1.lname);
+			printf("Welcome ! %s %s", u1.fname, u1.lname);
 			
-			printf("........................../n");
+			printf("..........................\n");
 			
-			printf("---- Your Account Info----/n");
+			printf("---- Your Account Info----\n");
 			
-			printf("***************************/n");
+			printf("***************************\n");
 			
 			printf("Name: ..%s %s", u1.fname, u1.lname);
 
 		}
 	}
 
-	fclose(fp);
+	fclose(fp); //closed (read) file//
 
 	
 
@@ -352,39 +402,47 @@ void transfermoney(void)
 	// Taking amount input
 	printf("Enter the amount to be transferred:" );
 	scanf("%d", &m1.money1);
-
-	// Writing to the file
-	fwrite(&m1, sizeof(m1), 1, fm);
-
-	printf("------------------------------------------------");
-
-	printf("--------------------------------------------------");
-		
-
-	printf("Transfering amount, Please wait..");
-
-	
-	for (i = 0; i < 70; i++) 
+//	if (&m1.money1 > balance)
+//	{
+//		printf("Transfer amount is greater than User Balance. \nTry giving the quiz to obtain reward money!\n");
+//		quiz();
+//	}
+//	else
 	{
-		for (j = 0; j < 1200000; j++)
-		 {
-			j++;
-			j--;
+		// Writing to the file
+		fwrite(&m1, sizeof(m1), 1, fm);
+
+		printf("------------------------------------------------\n");
+
+		printf("--------------------------------------------------\n");
+			
+
+		printf("Transfering amount, Please wait..\n");
+
+		
+		for (i = 0; i < 70; i++) 
+		{
+			for (j = 0; j < 1200000; j++)
+			{
+				j++;
+				j--;
+			}
+			printf("*");
 		}
-		printf("*");
+
+
+		printf("Amount successfully transferred! ");
+		getche();
+
+		// Close the files
+		fclose(fp);
+		fclose(fm);
+
+		// Function to return
+		// to the home screen
+		display(usernamet);
 	}
-
-
-	printf("AMOUNT SUCCESSFULLY TRANSFERRED....");
-	getche();
-
-	// Close the files
-	fclose(fp);
-	fclose(fm);
-
-	// Function to return
-	// to the home screen
-	display(usernamet);
+	
 }
 
 // Function to check balance
@@ -404,17 +462,11 @@ void checkbalance(char username2[])
 	
 	printf("***************************\n");
 	
-	printf("S No: \n");
-	
-	printf("Transaction ID: \n");
-	
-	printf("Account: \n");
-
 	// Reading username to
 	// fetch the correct record
-	while (fread(&m1, sizeof(m1),
-				1, fm)) {
-		if (strcmp(username2, m1.usernameto) == 0)
+	while (fread(&m1, sizeof(m1), 1, fm)) 
+	{
+		if (strcmp(username2, m1.usernameto) == 0) //if the username that we are sending the money to, exists//
 		 {	
 			printf("%d", i);
 			i++;
