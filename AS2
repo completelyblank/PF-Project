@@ -1,0 +1,820 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<math.h>
+#include <string.h>
+#include <windows.h>
+
+// Declaring all the functions
+void checkbalance(char*);
+void transfermoney(char*);
+void display(char*);
+void person(char*);
+int login(void);
+void loginsu(void);
+void account(void);
+void accountcreated(void);
+void afterlogin(void);
+void logout(void);
+int quiz(char *);
+
+// Creating a global structure to store
+// data of the user
+struct pass 
+{
+	char username[50];
+	char userpass[50];
+	char fname[20];
+	char lname[20];
+	float balance;
+	
+}u1;
+
+// Structure to keep track
+// of amount transfer
+struct money 
+{
+	char usernameto[50];
+	char userpersonfrom[50];
+	float money1;
+	
+};
+
+// Function to create accounts
+// of users
+void account(void)
+{
+	char password[20]; //
+	int passwordlength, i, seek = 0;
+	char ch;
+	FILE *fp, *fu; //fp is for opening the file// //fu is for closing file//
+	struct pass u1; //making a structure from the pass structure named u1//
+	
+	// Opening file to
+	// write data of a user
+	fp = fopen("test.txt", "a"); //opening a file in appending mode//
+
+	// Inputs
+	system("cls");
+	printf("\nCreate Account: ");
+
+	printf("\nFirst Name: ");
+	scanf("%s", &u1.fname);
+
+	printf("\nLast Name: ");
+	scanf("%s", &u1.lname);
+	
+	printf("\nUsername: ");
+	scanf("%s", &u1.username);
+
+	printf("\nPassword: ");
+
+	//Password 
+		for (i = 0; i < 50; i++) 
+	{
+		ch = getch();
+		if (ch != 13)
+		 {
+			u1.userpass[i] = ch;
+			ch = '*';	
+			printf("%c", ch);
+		 }
+		else if (ch == 13)
+		{
+			break;
+		}
+	}
+	u1.userpass[i]='\0';
+	
+	// Writing to the file
+	fprintf(fp, "%s %s %f\n", u1.username,u1.userpass,u1.balance);
+
+	// Closing file
+	fclose(fp);
+
+	// Calling another function
+	// after successful creation
+	// of account
+	accountcreated();
+}
+
+// Successful account creation
+void accountcreated(void)
+{
+	int i;
+	char ch;
+	system("cls");
+	printf("Please wait....\nYour data is processing....");
+	for (i = 0; i < 200000000; i++) 
+	{
+		i++;
+		i--;
+	}
+
+	printf("\nAccount has been created successfully....\n");
+	
+
+	printf("\nPress Enter to login: ");
+
+	getche();
+	login();//calling function
+}
+
+// Login function to check
+// the username of the user
+int login(void)
+{
+	system("cls");
+	int value;
+	int flag=0;
+    int user=0;
+    char username[50];
+    char password[50];
+    char tuser[50];
+    char tpass[50];
+    int i, j, k, count=0, count2=0, value2;
+    char ch;
+    FILE *fp, *fu;
+    //struct pass u1;
+    
+    // Opening file of
+    // user data
+    
+    printf(" Account Login: \n");
+    
+    printf("********\n");
+
+    printf("---- Log In ----\n");
+
+    // Take input
+    
+    // Checking if username
+    // exists in the file or not
+
+    printf("Username: ");
+    fflush(stdin);
+	gets(username);
+    printf("\nPassword: ");
+    gets(password);
+
+    fp = fopen("test.txt", "r"); //opening a file in the read mode//
+
+    if (fp == NULL) 
+    {
+        return NULL;
+    }
+    
+    else
+    {
+    
+        while(fscanf(fp, "%s %s", u1.username, u1.userpass) != EOF)
+        {
+            if(strcmp(username,u1.username) == 0)
+            {                
+                if (strcmp(password,u1.userpass) == 0)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+		}
+    }
+    
+    if (flag == 0)
+    {
+    	printf("Invalid Credentials. \n");
+	}
+	
+	else 
+	{
+		printf("Login Sucessful. \n");
+		loginsu();
+		display(username);
+	}
+    
+    fseek(fp, 7, SEEK_SET);  
+    fclose(fp);
+
+}
+// Redirect after
+// successful login
+void loginsu(void)
+{
+	
+	int i;
+	FILE* fp;
+	struct pass u1;
+	system("cls");
+	printf("Fetching account details: \n");
+	for (i = 0; i < 20000; i++) 
+	{
+		i++;
+		i--;
+	}
+
+	
+	printf("Login Successful: \n");
+	
+	printf("Press Enter to continue: \n");
+
+	getche();
+}
+
+// Display function to show the
+// data of the user on screen
+void display(char username[])
+{
+	system("cls");
+	FILE* fp;
+	int choice, i;
+	fp = fopen("test.txt", "r");
+	struct pass u1;
+
+	if (fp == NULL) 
+	{
+		printf("Error in opening the file. ");
+	}
+
+	while (fread(&u1, sizeof(u1), 1, fp)) 
+	{
+		if (strcmp(username, u1.username) == 0) //if predefined username and username entered are equal//
+		 {
+			
+			printf("Welcome ! %s %s\n", u1.fname, u1.lname);
+			
+			printf("..........................\n");
+			
+			printf("---- Your Account Info----\n");
+			
+			printf("***\n");
+			
+			printf("Name: ..%s %s", u1.fname, u1.lname);
+
+		}
+	}
+
+	fclose(fp); //closed (read) file//
+
+	// Menu to perform different
+	// actions by user
+	printf(" HOME ");
+	
+	printf("**\n");
+	
+	printf("1....Check Balance: \n");
+	
+	printf("2....Transfer Money: \n");
+	
+	printf("3....Log Out: \n");
+	
+	printf("4....Quiz: \n");
+	
+	printf("5....Exit: \n");
+
+	printf("Enter your choice: \n");
+	scanf("%d", &choice);
+
+	switch (choice) 
+	{
+		case 1:
+			checkbalance(username);
+			break;
+	
+		case 2:
+			transfermoney(username);
+			break;
+	
+		case 3:
+			logout();
+			login();
+			break;
+	
+		case 4:
+			u1.balance=u1.balance + (50*quiz(username));
+		
+		case 5:
+			exit(0);
+			break;	
+		}
+		
+	}
+
+// Function to transfer
+// money from one user to
+// another
+void transfermoney(char username[])
+{
+	int i, j;
+	FILE *fm, *fp;
+	struct pass u1;
+	struct money m1;
+	char usernamet[20];
+	char usernamep[20];
+	system("cls");
+
+	// Opening file in read mode to
+	// read user's username
+	fp = fopen("test.txt", "r");
+
+	// Creating a another file
+	// to write amount along with
+	// username to which amount
+	// is going to be transferred
+	fm = fopen("mon.txt", "a");
+
+	
+	printf("---- Transfer Money ----\n");
+	
+	printf("========================\n");
+
+	
+	printf("From (your username).. \n");
+	scanf("%s", &usernamet);
+
+	
+	printf(" To (username of person)..\n");
+	scanf("%s", &usernamep);
+
+	// Checking for username if it
+	// is present in file or not
+	while (fscanf(fp, "%s %s", u1.username, u1.userpass) != EOF)
+	{
+		if (strcmp(usernamep, u1.username) == 0)
+		{
+				strcpy(m1.usernameto, u1.username);
+				strcpy(m1.userpersonfrom, usernamet);
+		}
+	}
+	
+	// Taking amount input
+	printf("Enter the amount to be transferred:" );
+	scanf("%d", &m1.money1);
+	if (m1.money1 > u1.balance)
+	{
+		printf("Transfer amount is greater than User Balance. \nTry giving the quiz to obtain reward money!\n");
+		
+	    u1.balance=u1.balance+(quiz(username)*50);
+	}
+	else
+	{
+		// Writing to the file
+		fwrite(&m1, sizeof(m1), 1, fm);
+
+		printf("------------------------------------------------\n");
+
+		printf("--------------------------------------------------\n");
+			
+
+		printf("Transfering amount, Please wait..\n");
+
+		
+		for (i = 0; i < 70; i++) 
+		{
+			for (j = 0; j < 1200000; j++)
+			{
+				j++;
+				j--;
+			}
+			printf("*");
+		}
+
+
+		printf("Amount successfully transferred! ");
+		getche();
+
+		// Close the files
+		fclose(fp);
+		fclose(fm);
+
+		// Function to return
+		// to the home screen
+		display(usernamet);
+	}
+	
+}
+
+// Function to check balance
+// in users account
+void checkbalance(char username2[])
+{
+	system("cls");
+	FILE* fm;
+	struct money m1;
+	char ch;
+	int i = 1, summoney = 0;
+
+	// Opening amount file record
+	fm = fopen("mon.txt", "r");
+
+	printf("---- BALANCE DASHBOARD ----\n");
+	
+	printf("***\n");
+	
+	// Reading username to
+	// fetch the correct record
+	while (fread(&m1, sizeof(m1), 1, fm)) 
+	{
+		if (strcmp(username2, m1.usernameto) == 0) //if the username that we are sending the money to, exists//
+		 {	
+			printf("%d", i);
+			i++;
+			
+			printf("%s", m1.userpersonfrom);
+	
+			printf("%d", m1.money1);
+			// Adding and
+			// finding total money
+			summoney = summoney + m1.money1;
+		}
+	}
+	
+	printf("Total Amount: ");
+
+	printf("%d", summoney);
+
+	getche();
+
+	// Closing file after
+	// reading it
+	fclose(fm);
+	display(username2);
+}
+
+// Logout function to bring
+// user to the login screen
+void logout(void)
+{
+	int i, j;
+	system("cls");
+	printf("Please wait, logging out");
+
+	for (i = 0; i < 10; i++) 
+	{
+		for (j = 0; j < 25000000; j++)
+		{
+			i++;
+			i--;
+		}
+		printf(".");
+	}
+
+	
+	printf("Sign out successfully..\n");
+
+	
+	printf("Press any key to continue..\n");
+
+	getche();
+}
+
+/*void quiz()
+{
+		char quest [5][100];
+		char optionl [3][20],option2 [3][20], 
+		option3 [3][20],option4 [3][20], 
+		option5 [3][20]; 
+		int response[5], correct_ans[5], option,i, marks;  
+		system("cls");
+		strcpy(quest[0], "Name the capital of India");  
+		strcpy (optionl [0],"1. Mumbai");  
+		strcpy(optionl[1] ,"2. New Delhi");  
+		strcpy(optionl[2] ,"3. Chennai");  
+		correct_ans[0] = 1;  
+		strcpy(quest[1], "Name the national bird of India");  
+		strcpy(option2 [0],"1. Peacock");  
+		strcpy(option2[1], "2. Sparrow");  
+		strcpy(option2[2],"3. Parrot");  
+		correct_ans[1]=0;  
+		strcpy(quest[2], "Name the First Prime minister of India");  
+		strcpy(option3 [0],"1. M D Gandi");  
+		strcpy(option3[1] ,"2. S D Sharma");  
+		strcpy(option3 [2],"3. J L Nehru");  
+		correct_ans[2]=2;  
+		strcpy(quest[3], "Name the first female president of India");  
+		strcpy(option4 [0],"l. Pratibha Patil");  
+		strcpy(option4[1] ,"2. Sonia Gandhi");  
+		strcpy(option4[2] ,"3. Indira Gandhi");  
+		correct_ans[3] = 0;  
+		strcpy(quest[4], "Name the youngest prime minister of India");  
+		strcpy(option5[0],"l. Rajiv Gandhi");  
+		strcpy(option5[1], "2. Sanjay Gandhi");  
+		strcpy(option5[2],"3. Rahul Gandhi");  
+		correct_ans[4] = 0; 
+		do {  
+			printf("\n\n\n\n QUIZ PROGRAM"); 
+			printf("\n***");  
+			printf("\n 1. Display Questions");  
+			printf("\n 2. Display Correct Answers");  
+			printf("\n 3. Display Result");  
+			printf("\n 4. EXIT");  
+			printf ("\n ***");  
+			printf("\n\n\n Enter your option: ");  
+			scanf("%d", &option);  
+			switch(option)  {  
+			case 1:    
+				printf ("\n %s \n", quest [0]);   
+				for(i=0;i<3;i++)   {   
+					printf("\n %s", optionl[i]);   
+				}   
+				printf ("\n\n Enter your answer number: ");   
+				scanf("%d", &response[0]);   
+				printf ("\n %s \n", quest [1]);   
+				for (i=0;i<3;i++)   {   
+					printf("\n %s", option2[i]);   
+				}   
+				printf("\n\n Enter your answer number: ");   
+				scanf("%d", &response[1]);   
+				printf("\n %s \n", quest[2]);  
+				for(i=0;i<3;i++)  {   
+					printf("\n %s", option3[i]);  
+				}   
+				printf("\n\n Enter your answer number: ");   
+				scanf ("%d", &response [2]);   
+				printf("\n %s \n", quest[3]);  
+				for (i=0;i<3;i++)  {   
+					printf("\n %s", option4[i]);  
+				}   
+				printf("\n\n Enter your answer number: ");   
+				scanf ("%d", &response [3]);   
+				printf("\n %s \n", quest[4]);  
+				for (i=0;i<3;i++)  {   
+					printf("\n %s", option5[i]);  
+				}   
+				printf("\n\n Enter your answer number: ");   
+				scanf ("%d", &response [4] );   
+				break;  
+			case 2:   
+				printf("\n\n CHECK THE CORRECT ANSWERS");   
+				printf("\n ****");   
+				printf("\n %s \n %s",quest[0] , optionl[correct_ans[0]]);   
+				printf("\n\n %s \n%s",quest[1] , option2[correct_ans[1]]);   
+				printf("\n\n %s \n%s",quest[2] , option3[correct_ans[2]]);   
+				printf("\n\n %s \n%s",quest[3] , option4[correct_ans[3]]);   
+				printf("\n\n %s \n%s",quest[4] , option5[correct_ans[4]]);   
+				break;  
+			case 3:   
+				marks = 0;  
+				for(i = 0;i <= 4;i++)  {   
+					if(correct_ans[i]+1==response[i]) 
+					  {   
+						marks++;   
+					  }  
+				}   
+				printf ("\n Out of 5 you score %d",marks);   
+				break;  
+			}  
+		}  
+			while(option!=4);  
+			getch();  
+			
+
+}*/ 
+
+int quiz(char username[]){
+	char choice,option,ch;
+	int score;
+	float x;
+    FILE *fp,*fu;
+
+printf("\nCategories:\n T - technology, S - sports, G - general knowledge, A - animals, P - Pakistan\nChoose category for quiz: ");
+fflush(stdin);
+scanf("%c",&choice);
+switch (choice){
+	case 'T':
+		printf("\nQ1: what was Google's originally named as?\nA-BackUp\nB-BackLinks\nC-BackRub\nD-Goolink\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='C'||option=='c'){
+			score++;
+		}
+		printf("\nQ2: what year was Facebook launched in?\nA-2004\nB-2000\nC-1999\nD-2007\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ3: Firewall in computer is used for?\nA-Authentication\nB-Monitoring\nC-Security\nD-I/O\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='C'||option=='c'){
+			score++;
+		}
+		printf("\nQ4: What is the total number of function keys on a keyboard?\nA-10\nB-12\nC-9\nD-20\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ5: What is the full form of PDF?\nA-Packed Document Form\nB-Published Document Frame\nC-Printable Document Format\nD-Portable Document Format\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		break;
+	case 'S':
+		printf("\nQ1: What name is given to the lightest weight category in Olympic boxing?\nA-Lightweight\nB-Light-Flyweight\nC-Flyweight\nD-Featherweight\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ2: How many yards are there between each set of stumps in cricket?\nA-200\nB-20\nC-19\nD-22\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		printf("\nQ3: Which swimmer won 7 gold medals at the 1972 Olympic games?\nA-Nathan Adrian\nB-Mark Spitz\nC-Jason Lezak\nD-Katie Ledecky\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ4: Who was the first overseas player to play county cricket for Yorkshire?\nA-Azeem Rafiq\nB-Sachin Tendulkar\nC-Mark Cleary\nD-Tino Best\n");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ5: In what year was the first football World Cup held?\nA-1975\nB-1960\nC-2000\nD-1930\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		break;
+	case 'G':
+		printf("\nQ1: Galileo was an Italian astronomer who\nA-Developed the telescope\nB-Discovered four satellites of Jupiter\nC-Discovered that the movement of pendulum produces a regular time measurement\nD-All of the above\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		printf("\nQ2: Gulf cooperation council was originally formed by\nA-Bahrain, Kuwait, Oman, Qatar, Saudi Arabia and United Arab Emirates\nB-Second World Nations\nC-Third World Nations\nD-Fourth World Nations\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ3: Fire temple is the place of worship of which of the following religion?\nA-Taoism\nB-Judaism\nC-Zoroastrianism (Parsi Religion)\nD-Shintoism\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='C'||option=='c'){
+			score++;
+		}
+		
+		printf("\nQ4: The ozone layer restricts\nA-Visible light\nB-Infrared radiation\nC-X-rays and gamma rays\nD-Ultraviolet radiation\n");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		printf("\nQ5: Headquarters of UNO are situated at\nA-New York, USA\nB-Hague (Netherlands)\nC-Geneva\nD-Paris\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		break;
+	case 'P':
+		printf("\nQ1: What is the meaning of Pakistan?\nA-Holy land\nB-Pure land\nC-Tribal land\nD-Muslim land\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ2: According to population, which is the largest city in Pakistan?\nA-Karachi\nB-Lahore\nC-Islamabad\nD-Quetta\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ3: How many languages are spoken in Pakistan?\nA-50\nB-32\nC-2\nD-100\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ4: In which year did Pakistan win the Cricket World Cup?\nA-1940\nB-1998\nC-1992\nD-2011\n");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='C'||option=='c'){
+			score++;
+		}
+		printf("\nQ5: What is the national flower of Pakistan?\nA-Jasmine\nB-Marigold\nC-Rose\nD-Tulip\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		break;
+		
+	case 'A':
+		printf("\nQ1: Which country is the largest exporter of hippopotamuses in Europe?\nA-Russia\nB-Hungary\nC-China\nD-Germany\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='B'||option=='b'){
+			score++;
+		}
+		printf("\nQ2: The largest bird alive is ?\nA-Ostrich\nB-Penguin\nC-Sparrow\nD-Seagull\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ3: The fastest-moving land snake in the world is?\nA-Black Mamba\nB-Rattle snake\nC-Anaconda\nD-Python\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='A'||option=='a'){
+			score++;
+		}
+		printf("\nQ4: The largest seabird is the\nA-Puffins\nB-Pelicans\nC-Albatross\nD-Sea gulls\n");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='C'||option=='c'){
+			score++;
+		}
+		printf("\nQ5: What name is given to a female deer?\nA-Fawn\nB-Mare\nC-Kid\nD-Doe\n ");
+		fflush(stdin);
+		scanf("%c",&option);
+		if (option=='D'||option=='d'){
+			score++;
+		}
+		break;
+    }
+    x=u1.balance+(score*50);
+    fp=fopen("test.txt","r+");
+    fu=fopen("update.txt","w");
+    
+    while(fscanf(fp, "%s", u1.username) != EOF)
+        {
+        	ch=fgetc(fp);
+            if(strcmp(username,u1.username) == 0)
+            {                
+				fprintf(fu,"%s %s %f\n",u1.username,u1.userpass,x);
+            }
+            else if(strcmp(username,u1.username) != 0){
+            	fprintf(fu, "%c", ch);
+			}
+		}
+	fclose(fp);
+	fclose(fu);
+	printf("\nCongratulations!!! you have won %d",score*50);
+	sleep(3);
+    system ("cls");
+	display(username);
+}
+		
+
+		
+
+
+void main()
+{
+	int i, a, b, choice;
+	int passwordlength;
+	system("color 06");
+
+	// Creating a Main
+	// menu for the user
+	printf("Hello and welcome!\n\n");
+	
+
+	printf("****\n");
+	
+
+	
+	printf("1.... Create a Bank Account: \n");
+
+	
+	printf("2.... Already a user? Sign in!: \n");
+	
+	printf("3.... Exit\n");
+	
+	printf("****\n");
+
+	printf("\n\nEnter your choice: ");
+
+	scanf("%d", &choice);
+
+	switch (choice) 
+	{
+		case 1:
+			system("cls");
+			printf("\n Username 50 characters max. ");
+			printf("\n Password should be 50 characters max. ");
+			account();
+			break;
+	
+		case 2:
+			login();
+			break;
+	
+		case 3:
+			exit(0);
+			break;
+	
+			getch();	
+	}
+}
